@@ -1,5 +1,5 @@
 ---
-- name: Combining nic cards in the server
+- name: bonding and teaming configuration based on the server os
   hosts: trinathsrv1, trinath-ubuntu1, trinath-centos2
   remote_user: root
   become: true
