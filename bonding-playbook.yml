@@ -38,6 +38,10 @@
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'bond0'}
                        - {conn_name: 'ens39', ifname: 'ens39', master: 'bond0'}
            block:
+                - name: install network manager
+                   apt:
+                       name: network-manager
+                       state: present
                  - name: Master Interface Configuration in Ubuntu
                    copy:
                         dest: /etc/netplan/01-netcfg.yaml
