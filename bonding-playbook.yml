@@ -1,16 +1,16 @@
 ---
 - name: Combining nic cards in the server
-  hosts: clients
-  remote_user: ansadmin
+  hosts: trinathsrv1, trinath-ubuntu1, trinath-centos2
+  remote_user: root
   become: true
   tasks:
         -  name: Teaming Configuration in RHEL 7
            vars:
                 - nmcli_team:
-                       - {conn_name: 'team0', ip4: "192.168.29.197/24", gw4: "192.168.29.1", mode: 'active-backup'}
+                       - {conn_name: 'team0', ip4: "192.168.29.158/24", gw4: "192.168.29.1", mode: 'active-backup'}
                 - nmcli_team_slave:
-                       - {conn_name: 'ens37', ifname: 'ens37', master: 'team0'}
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'team0'}
+                       - {conn_name: 'ens39', ifname: 'ens39', master: 'team0'}
            block:
                  -  name: Master Interface Configuration in RHEL 7
                     nmcli:
@@ -35,8 +35,8 @@
         -  name: Bonding Configuration in Ubuntu
            vars:
                 - nmcli_bond_slave:
-                       - {conn_name: 'ens37', ifname: 'ens37', master: 'bond0'}
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'bond0'}
+                       - {conn_name: 'ens39', ifname: 'ens39', master: 'bond0'}
            block:
                  - name: Master Interface Configuration in Ubuntu
                    copy:
@@ -45,18 +45,18 @@
                               network:
                                   version: 2
                                   ethernets:
-                                     ens37:
-                                        dhcp4: no
                                      ens38:
+                                        dhcp4: no
+                                     ens39:
                                         dhcp4: no
                                   bonds:
                                       bond0:
                                          dhcp4: no
                                          interfaces:
-                                              - ens37
                                               - ens38
+                                              - ens39
                                          addresses:
-                                              - 192.168.29.190/24
+                                              - 192.168.29.157/24
                                          gateway4: 192.168.29.1
                                          nameservers:
                                              addresses:
@@ -75,10 +75,10 @@
         -  name: Bonding Configuration in CentOs
            vars:
                 - nmcli_bond:
-                       - {conn_name: 'bond0', ip4: "192.168.29.194/24", gw4: "192.168.29.1", mode: 'active-backup'}
+                       - {conn_name: 'bond0', ip4: "192.168.29.159/24", gw4: "192.168.29.1", mode: 'active-backup'}
                 - nmcli_bond_slave:
-                       - {conn_name: 'ens224', ifname: 'ens224', master: 'bond0'}
-                       - {conn_name: 'ens256', ifname: 'ens256', master: 'bond0'}
+                       - {conn_name: 'ens37', ifname: 'ens37', master: 'bond0'}
+                       - {conn_name: 'ens38', ifname: 'ens38', master: 'bond0'}
            block:
                  -  name: Master Interface Configuration CentOs
                     nmcli:
